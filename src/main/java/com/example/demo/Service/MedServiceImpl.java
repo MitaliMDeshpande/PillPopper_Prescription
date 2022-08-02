@@ -1,5 +1,5 @@
 package com.example.demo.Service;
-
+import java.util.*;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Dao.Entity.Medicine;
 import com.example.demo.Repository.MedicineRepository;
+import com.example.demo.exception.ResourceNotFoundException;
+
 
 @Service
 public class MedServiceImpl implements MedService{
@@ -32,19 +34,45 @@ public class MedServiceImpl implements MedService{
 
 	@Override
 	public Medicine getMedById(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Medicine> med = medRepo.findById(id);
+		if(med.isPresent()) {
+			return med.get();
+		}else {
+			throw new ResourceNotFoundException("Medicine", "Id", id);
+		}
+		//return medRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Medicine", "Id", id));
 	}
 
 	@Override
 	public Medicine updateMed(Medicine medicine, long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Medicine> med = medRepo.findById(id);
+		if(med.isPresent()) {
+			Medicine medicine1= med.get();
+			medicine1.setMedName(medicine.getMedName());
+			medicine1.setMorningdosage(medicine.getMorningdosage());
+			medicine1.setAfternoonDosage(medicine.getEveningDosage());
+			medicine1.setEveningDosage(medicine.getEveningDosage());
+			medicine1.setNightDosage(medicine.getNightDosage());
+			medicine1.setMorningTiming(medicine.getMorningTiming());
+			medicine1.setAfternoonTiming(medicine.getAfternoonTiming());
+			medicine1.setEveningTiming(medicine.getEveningTiming());
+			medicine1.setNightTiming(medicine.getNightTiming());
+			medRepo.save(medicine1);
+			return medicine1;
+		}else {
+			throw new ResourceNotFoundException("Medicine", "Id", id);
+		}
+		
 	}
 
 	@Override
 	public void deleteMed(long id) {
-		// TODO Auto-generated method stub
+		Optional<Medicine> med = medRepo.findById(id);
+		if(med.isPresent()) {
+			medRepo.deleteById(id);
+		}else {
+			throw new ResourceNotFoundException("Medicine", "Id", id);
+		}
 		
 	}
 
