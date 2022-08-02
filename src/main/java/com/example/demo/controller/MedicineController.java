@@ -1,36 +1,81 @@
-package com.example.demo.controller;
-
+package com.example.demo.Service;
+import java.util.*;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.Dao.Entity.Medicine;
-import com.example.demo.Service.MedService;
+import com.example.demo.Repository.MedicineRepository;
+import com.example.demo.exception.ResourceNotFoundException;
 
-@RestController
-@RequestMapping("api/v1/")
-public class MedicineController {
+
+@Service
+public class MedServiceImpl implements MedService{
 	@Autowired
-	private MedService medservice;
-	public MedicineController(MedService medservice) {
+	MedicineRepository medRepo;
+	
+	public MedServiceImpl(MedicineRepository medRepo) {
 		super();
-		this.medservice = medservice;
+		this.medRepo = medRepo;
 	}
 	
-	@GetMapping("medicines")
-	public List<Medicine> getAllMedicines(){
-		return this.medservice.getAllMedicines();
+	@Override
+	public Medicine saveMed(Medicine medicine) {
+		// TODO Auto-generated method stub
+		return medRepo.save(medicine);
 	}
-	@PostMapping("medicines")
-	public Medicine createMedicine(@RequestBody Medicine medicines) {
-		return this.medservice.saveMed(medicines);
+
+	@Override
+	public List<Medicine> getAllMedicines() {
+		// TODO Auto-generated method stub
+		return medRepo.findAll();
+	}
+
+	@Override
+	public Medicine getMedById(long id) {
+		Optional<Medicine> med = medRepo.findById(id);
+		if(med.isPresent()) {
+			return med.get();
+		}else {
+			throw new ResourceNotFoundException("Medicine", "Id", id);
+		}
+		//return medRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Medicine", "Id", id));
+	}
+
+	@Override
+	public Medicine updateMed(Medicine medicine, long id) {
+		Optional<Medicine> med = medRepo.findById(id);
+		if(med.isPresent()) {
+			Medicine medicine1= med.get();
+			medicine1.setMedName(medicine.getMedName());
+			medicine1.setMorningdosage(medicine.getMorningdosage());
+			medicine1.setAfternoonDosage(medicine.getEveningDosage());
+			medicine1.setEveningDosage(medicine.getEveningDosage());
+			medicine1.setNightDosage(medicine.getNightDosage());
+			medicine1.setMorningTiming(medicine.getMorningTiming());
+			medicine1.setAfternoonTiming(medicine.getAfternoonTiming());
+			medicine1.setEveningTiming(medicine.getEveningTiming());
+			medicine1.setNightTiming(medicine.getNightTiming());
+			medRepo.save(medicine1);
+			return medicine1;
+		}else {
+			throw new ResourceNotFoundException("Medicine", "Id", id);
+		}
 		
 	}
+
+	@Override
+	public void deleteMed(long id) {
+		Optional<Medicine> med = medRepo.findById(id);
+		if(med.isPresent()) {
+			medRepo.deleteById(id);
+		}else {
+			throw new ResourceNotFoundException("Medicine", "Id", id);
+		}
+		
+	}
+
 	
-	
+
 }
