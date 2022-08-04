@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.Dao.Entity.Medicine;
 import com.example.demo.Service.MedService;
+
 
 @RestController
 @RequestMapping("api/v1/")
@@ -38,12 +38,13 @@ public class MedicineController {
 	}
 	@GetMapping("medicines/{id}")
 	public ResponseEntity<Medicine> getMedicineById(@PathVariable("id") long id){
-		return new ResponseEntity<Medicine>(medservice.getMedById(id), HttpStatus.OK);
+	    return new ResponseEntity<Medicine>(medservice.getMedById(id), HttpStatus.OK);
+		
 	}
 	
 	@PutMapping("medicines/{id}")
 	public ResponseEntity<Medicine> updateMedicine(@PathVariable("id") long id, @RequestBody Medicine medicine){
-
+		
 		return new ResponseEntity<Medicine>(medservice.updateMed(medicine, id), HttpStatus.OK);
 	}
 	
@@ -52,5 +53,11 @@ public class MedicineController {
 		medservice.deleteMed(id);
 		
 		return new ResponseEntity<String>("Medicine details deleted successfully!", HttpStatus.OK);
+	}
+	
+	@GetMapping("Alarm")
+	@Scheduled(fixedRate=10000)
+	public String getAllMedicinesAlarm(){
+		return this.medservice.getAllMedicinesAlarm();
 	}
 }
