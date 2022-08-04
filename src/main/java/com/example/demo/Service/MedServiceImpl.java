@@ -1,4 +1,5 @@
 package com.example.demo.Service;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class MedServiceImpl implements MedService{
 	@Override
 	public Medicine saveMed(Medicine medicine) {
 		// TODO Auto-generated method stub
+		
 		return medRepo.save(medicine);
 	}
 
@@ -40,7 +42,6 @@ public class MedServiceImpl implements MedService{
 		}else {
 			throw new ResourceNotFoundException("Medicine", "Id", id);
 		}
-		//return medRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Medicine", "Id", id));
 	}
 
 	@Override
@@ -75,7 +76,56 @@ public class MedServiceImpl implements MedService{
 		}
 		
 	}
-
+	public String getAllMedicinesAlarm() {
+		LocalTime now = LocalTime.now();
+		int lhrs,lmins;
+		int morhrs,mormins, afterhrs, aftermins, evenhrs, evenmins, nighthrs, nightmins;
+		lhrs=now.getHour();
+		lmins=now.getMinute();
+		List<Medicine> med = medRepo.findAll();
+		boolean flag=false;
+		for(Medicine m:med){
+			if(m.getMorningTiming()!=null) {
+				LocalTime morningtime=m.getMorningTiming().minusMinutes(30);
+				morhrs=morningtime.getHour();
+			    mormins=morningtime.getMinute();
+			    if(morhrs==lhrs && lmins==mormins){
+			    	flag=true;
+			    }
+			}
+			if(m.getAfternoonTiming()!=null) {
+				LocalTime afternoontime=m.getAfternoonTiming().minusMinutes(30);
+				afterhrs=afternoontime.getHour();
+			    aftermins=afternoontime.getMinute();
+				if(afterhrs==lhrs && lmins==aftermins)
+			    {
+			    	flag=true;
+			    }
+			}
+		    if(m.getEveningTiming()!=null) {
+		    	LocalTime eveningtime=m.getEveningTiming().minusMinutes(30);
+		    	evenhrs=eveningtime.getHour();
+			    evenmins=eveningtime.getMinute();
+		    	if(evenhrs==lhrs && evenmins==lmins)
+		    	{
+		    		flag=true;
+		    	}
+		    }
+		    if(m.getNightTiming()!=null) {
+		    	LocalTime nighttime=m.getNightTiming().minusMinutes(30);
+		    	nighthrs=nighttime.getHour();
+			    nightmins=nighttime.getMinute();
+		    	if(nighthrs==lhrs && lmins==nightmins) {
+		    		flag=true;
+		    	}
+		    }
+		}
+		   if(flag==true)
+		   {
+			   return "Time to take your Medicine";
+		   }
+		   return null;
+	}
 	
 
 }
