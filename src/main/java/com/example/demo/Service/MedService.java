@@ -10,4 +10,5 @@ public interface MedService {
 	Medicine getMedById(long id);
 	Medicine updateMed(Medicine medicine, long id);
 	void deleteMed(long id);
+	String getAllMedicinesAlarm();
 }
