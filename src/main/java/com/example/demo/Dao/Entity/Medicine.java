@@ -6,10 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import java.sql.Time;
-//import java.sql.Timestamp;
- 
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "medicines")
@@ -30,13 +27,13 @@ public class Medicine {
 	@Column(name = "NightDosage")
 	String NightDosage;
 	@Column(name = "Morningtime")
-    Time MorningTiming ;
+    LocalTime MorningTiming ;
 	@Column(name = "Afternoontime")
-    Time AfternoonTiming ;
+    LocalTime AfternoonTiming ;
 	@Column(name = "Eveningtime")
-    Time EveningTiming ;
+    LocalTime EveningTiming ;
 	@Column(name = "Nighttime")
-    Time NightTiming ;
+    LocalTime NightTiming ;
 	
 	public Medicine() {
 		super();
@@ -46,7 +43,7 @@ public class Medicine {
 
 
 	public Medicine(String medName, String isSyrup, String morningDosage, String afternoonDosage, String eveningDosage,
-			String nightDosage, Time morningTiming, Time afternoonTiming, Time eveningTiming, Time nightTiming) {
+			String nightDosage, LocalTime morningTiming, LocalTime afternoonTiming, LocalTime eveningTiming, LocalTime nightTiming) {
 		super();
 		this.medName = medName;
 		this.isSyrup = isSyrup;
@@ -62,49 +59,47 @@ public class Medicine {
 	
 	
 	
-	public Time getMorningTiming() {
+	public LocalTime getMorningTiming() {
 		return MorningTiming;
 	}
 
 
 
-	public void setMorningTiming(Time morningTiming) {
+	public void setMorningTiming(LocalTime morningTiming) {
 		MorningTiming = morningTiming;
 	}
 
 
 
-	public Time getAfternoonTiming() {
+	public LocalTime getAfternoonTiming() {
 		return AfternoonTiming;
 	}
 
 
 
-	public void setAfternoonTiming(Time afternoonTiming) {
+	public void setAfternoonTiming(LocalTime afternoonTiming) {
 		AfternoonTiming = afternoonTiming;
 	}
 
 
 
-	public Time getEveningTiming() {
+	public LocalTime getEveningTiming() {
 		return EveningTiming;
 	}
 
 
 
-	public void setEveningTiming(Time eveningTiming) {
+	public void setEveningTiming(LocalTime eveningTiming) {
 		EveningTiming = eveningTiming;
 	}
 
 
 
-	public Time getNightTiming() {
+	public LocalTime getNightTiming() {
 		return NightTiming;
 	}
 
-
-
-	public void setNightTiming(Time nightTiming) {
+	public void setNightTiming(LocalTime nightTiming) {
 		NightTiming = nightTiming;
 	}
 
