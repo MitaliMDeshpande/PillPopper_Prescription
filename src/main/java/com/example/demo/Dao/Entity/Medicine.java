@@ -34,6 +34,8 @@ public class Medicine {
     LocalTime EveningTiming ;
 	@Column(name = "Nighttime")
     LocalTime NightTiming ;
+	@Column(name="Duration")
+	int duration;
 	
 	public Medicine() {
 		super();
@@ -43,22 +45,35 @@ public class Medicine {
 
 
 	public Medicine(String medName, String isSyrup, String morningDosage, String afternoonDosage, String eveningDosage,
-			String nightDosage, LocalTime morningTiming, LocalTime afternoonTiming, LocalTime eveningTiming, LocalTime nightTiming) {
+			String nightDosage, LocalTime morningTiming, LocalTime afternoonTiming, LocalTime eveningTiming, LocalTime nightTiming, int duration) {
 		super();
 		this.medName = medName;
 		this.isSyrup = isSyrup;
-		MorningDosage = morningDosage;
-		AfternoonDosage = afternoonDosage;
-		EveningDosage = eveningDosage;
-		NightDosage = nightDosage;
-		MorningTiming = morningTiming;
-		AfternoonTiming = afternoonTiming;
-		EveningTiming = eveningTiming;
-		NightTiming = nightTiming;
+		this.MorningDosage = morningDosage;
+		this.AfternoonDosage = afternoonDosage;
+		this.EveningDosage = eveningDosage;
+		this.NightDosage = nightDosage;
+		this.MorningTiming = morningTiming;
+		this.AfternoonTiming = afternoonTiming;
+		this.EveningTiming = eveningTiming;
+		this.NightTiming = nightTiming;
+		this.duration=duration;
 	}	
 	
 	
 	
+	public int getDuration() {
+		return duration;
+	}
+
+
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+
+
 	public LocalTime getMorningTiming() {
 		return MorningTiming;
 	}
