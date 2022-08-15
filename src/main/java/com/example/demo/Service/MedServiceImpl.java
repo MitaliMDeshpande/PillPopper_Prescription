@@ -1,4 +1,6 @@
 package com.example.demo.Service;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
@@ -58,6 +60,7 @@ public class MedServiceImpl implements MedService{
 			medicine1.setAfternoonTiming(medicine.getAfternoonTiming());
 			medicine1.setEveningTiming(medicine.getEveningTiming());
 			medicine1.setNightTiming(medicine.getNightTiming());
+			medicine1.setDuration(medicine.getDuration());
 			medRepo.save(medicine1);
 			return medicine1;
 		}else {
@@ -78,7 +81,11 @@ public class MedServiceImpl implements MedService{
 	}
 	public String getAllMedicinesAlarm() {
 		LocalTime now = LocalTime.now();
+		LocalDate day=LocalDate.now();
+		DayOfWeek dayOfWeek = day.getDayOfWeek();
+	    int d = dayOfWeek.getValue();
 		int lhrs,lmins;
+		String meds="";
 		int morhrs,mormins, afterhrs, aftermins, evenhrs, evenmins, nighthrs, nightmins;
 		lhrs=now.getHour();
 		lmins=now.getMinute();
@@ -89,7 +96,8 @@ public class MedServiceImpl implements MedService{
 				LocalTime morningtime=m.getMorningTiming().minusMinutes(30);
 				morhrs=morningtime.getHour();
 			    mormins=morningtime.getMinute();
-			    if(morhrs==lhrs && lmins==mormins){
+			    if(morhrs==lhrs && lmins==mormins&& d<m.getDuration()){
+			    	meds=meds+" "+m.getMedName();
 			    	flag=true;
 			    }
 			}
@@ -97,8 +105,9 @@ public class MedServiceImpl implements MedService{
 				LocalTime afternoontime=m.getAfternoonTiming().minusMinutes(30);
 				afterhrs=afternoontime.getHour();
 			    aftermins=afternoontime.getMinute();
-				if(afterhrs==lhrs && lmins==aftermins)
+				if(afterhrs==lhrs && lmins==aftermins&&d<m.getDuration())
 			    {
+					meds=meds+" "+m.getMedName();
 			    	flag=true;
 			    }
 			}
@@ -106,8 +115,9 @@ public class MedServiceImpl implements MedService{
 		    	LocalTime eveningtime=m.getEveningTiming().minusMinutes(30);
 		    	evenhrs=eveningtime.getHour();
 			    evenmins=eveningtime.getMinute();
-		    	if(evenhrs==lhrs && evenmins==lmins)
+		    	if(evenhrs==lhrs && evenmins==lmins&&d<m.getDuration())
 		    	{
+		    		meds=meds+", "+m.getMedName();
 		    		flag=true;
 		    	}
 		    }
@@ -115,14 +125,15 @@ public class MedServiceImpl implements MedService{
 		    	LocalTime nighttime=m.getNightTiming().minusMinutes(30);
 		    	nighthrs=nighttime.getHour();
 			    nightmins=nighttime.getMinute();
-		    	if(nighthrs==lhrs && lmins==nightmins) {
+		    	if(nighthrs==lhrs && lmins==nightmins&&d<m.getDuration()) {
+		    		
 		    		flag=true;
 		    	}
 		    }
 		}
 		   if(flag==true)
 		   {
-			   return "Time to take your Medicine";
+			   return "Time to take your Medicine: "+meds;
 		   }
 		   return null;
 	}
